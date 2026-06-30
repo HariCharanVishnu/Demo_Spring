@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Task</title>
+</head>
+<body>
+<h2>Add New Task</h2>
+
+<form th:action="@{/tasks/add}" th:object="${task}" method="post">
+    <label>Title:</label>
+    <input type="text" th:field="*{title}" />
+    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+
+    <label>Description:</label>
+    <textarea th:field="*{description}"></textarea>
+    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+
+    <button type="submit">Add Task</button>
+</form>
+
+<a th:href="@{/tasks/list}">Back to List</a>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tasks List</title>
+</head>
+<body>
+<h2>All Tasks</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Completed</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.description}"></td>
+        <td th:text="${task.completed}"></td>
+        <td>
+            <a th:href="@{/tasks/edit/{id}(id=${task.id})}">Edit</a> |
+            <a th:href="@{/tasks/delete/{id}(id=${task.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/tasks/add}">Add New Task</a>
+</body>
+</html>
