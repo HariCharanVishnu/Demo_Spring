@@ -3,6 +3,8 @@ package com.example.ToDoList.service;
 import com.example.ToDoList.entity.Task;
 import com.example.ToDoList.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,5 +47,9 @@ public class TaskService {
             taskRepository.delete(task);
             return true;
         }).orElse(false);
+    }
+
+    public Page<Task> getTasks(Pageable pageable) {
+        return taskRepository.findAll(pageable);
     }
 }

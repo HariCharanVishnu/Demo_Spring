@@ -8,6 +8,10 @@ import com.example.ToDoList.exception.TaskNotFoundException;
 import com.example.ToDoList.mapper.TaskMapper;
 import com.example.ToDoList.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,7 +41,7 @@ public class TaskController {
     }
 
     // --- List Page ---
-    @GetMapping("/list")
+    @GetMapping("/list-all")
     public String listTasks(Model model) {
         List<TaskDto> tasks = taskService.getAllTasks()
                 .stream()
@@ -102,4 +106,25 @@ public class TaskController {
         taskService.deleteTask(id);
         return "redirect:/tasks/list";
     }
+
+    @GetMapping("/list")
+    public String listTasks(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "title") String sortBy,
+                            Model model) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sortBy));
+        Page<Task> taskPage = taskService.getTasks(pageable);
+
+        List<TaskDto> tasks = taskPage.getContent()
+                .stream()
+                .map(TaskMapper::toDto)
+                .collect(Collectors.toList());
+
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", taskPage.getTotalPages());
+        model.addAttribute("sortBy", sortBy);
+
+        return "tasks-list";
+    }
+
 }
